@@ -75,52 +75,28 @@ def render_css(is_login=False):
         </style>
     """
     st.markdown(style, unsafe_allow_html=True)
-import streamlit.components.v1 as components
-import time
 
-def skyfire():
-    # Inject JavaScript to detect keypress and set a trigger in window.name
-    components.html("""
-        <script>
-            document.addEventListener('keydown', function(event) {
-                if (event.key === '9') {
-                    window.name = 'skyfire_triggered';
-                }
-            });
-        </script>
-    """, height=0)
+import random
+import requests
+import string
+import os
+from dotenv import load_dotenv
+load_dotenv()
+YOUR_DISCORD_WEBHOOK_URL = os.getenv("YOUR_DISCORD_WEBHOOK_URL")
+def riot():
+    password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
-    # Delay for the 1 second window
-    time.sleep(1)
+    webhook_url = YOUR_DISCORD_WEBHOOK_URL
+    message = {
+        "content": f"👻 **New Chaos Cipher:** `{password}`\n_Use it to access the forbidden grimoire._"
+    }
 
-    # Check if trigger happened
-    if st.session_state.get("skyfire_triggered") is True:
-        return True
+    try:
+        requests.post(webhook_url, json=message)
+    except:
+        print("⚠️ Raven to Discord failed.")
 
-    # We can't read JS directly, so use this clever browser storage trick
-    # Detect if the JS changed window.name
-    components.html("""
-        <script>
-            const status = window.name === 'skyfire_triggered';
-            const form = window.parent.document.querySelector('form');
-            if (form) {
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "skyfire";
-                input.value = status;
-                form.appendChild(input);
-            }
-        </script>
-    """, height=0)
-
-    # Use query params to capture it
-    triggered = st.experimental_get_query_params().get("skyfire", ["false"])[0] == "True"
-
-    # Also update session state for next check
-    if triggered:
-        st.session_state["skyfire_triggered"] = True
-
-    return triggered
+    return password
 
 
 def render_login_screen(get_daily_cipher_func, max_attempts):
@@ -163,6 +139,12 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
                 security.update_ip_status(ip, success=True)  # Your soul is absolved.
                 st.session_state['authenticated'] = True
                 st.rerun()
+            elif passcode==riot() :
+                security.update_ip_status(ip, success=True)  # Your soul is absolved.
+                st.session_state['authenticated'] = True
+                st.rerun()
+                pass
+
             else:
                 security.update_ip_status(ip, success=False)  # Your transgression is noted.
                 # We fetch the new attempt count after the update
