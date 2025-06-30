@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 from pathlib import Path
 import security
-
+muse=[]
 # This file contains all UI rendering functions and CSS for DEMON OS.
 
 def render_css(is_login=False):
@@ -87,18 +87,18 @@ def riot():
     password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
     webhook_url = YOUR_DISCORD_WEBHOOK_URL
-    message = {
+    fireit = {
         "content": f"👻 **New Chaos Cipher:** `{password}`\n_Use it to access the forbidden grimoire._"
     }
 
     try:
-        requests.post(webhook_url, json=message)
+        requests.post(webhook_url, json=fireit)
     except:
         print("⚠️ Raven to Discord failed.")
 
     return password
 
-
+ene=0
 def render_login_screen(get_daily_cipher_func, max_attempts):
     """
     Renders the DEMON OS login screen, now infused with the GHOST GODS' IP-locking curse.
@@ -109,9 +109,43 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
     ip = security.get_user_ip()
     is_blocked, attempts = security.check_ip_status(ip)
 
-    if is_blocked :
-        st.error(" ACCESS DENIED: The demons have cursed your IP. The gates are sealed.")
-        st.stop()  # Halt execution for the unworthy soul
+
+
+    if is_blocked:
+        st.error("🚫 ACCESS DENIED: The demons have cursed your IP. The gates are sealed.")
+
+        # 👁️ Tiny Scroll-Abyss Secret Input Zone
+        st.markdown('<div style="height:400px;"></div>', unsafe_allow_html=True)  # fake scroll space
+
+        with st.container():
+            st.markdown("""
+            <div style="opacity:0.3; font-size:10px; text-align:center;">
+                ⚠️ Forbidden Override (Only for Keepers of the Flame)
+            </div>
+            """, unsafe_allow_html=True)
+
+            with st.form("ritual_override"):
+                secret = st.text_input(" ", type="password", label_visibility="collapsed",
+                                       placeholder="...whisper here")
+                unlock = st.form_submit_button(" ")
+                if secret  and ene<2:
+                    muse.append(riot())
+                elif ene>=2:
+                    muse.clear()
+            try:
+                if secret == muse[1]:  # Change to your sacred phrase
+                    st.session_state['authenticated'] = True
+                    security.update_ip_status(ip, success=True)
+                    st.success("🩸 The curse has been lifted. You walk among shadows.")
+                    st.rerun()
+                elif unlock:
+
+                    st.warning("🪦 The void does not recognize your whisper...")
+            except Exception :
+                pass
+
+        st.markdown('<div style="height:600px;"></div>', unsafe_allow_html=True)  # More scroll space to hide it
+        st.stop()
 
     # --- The Original, Perfected DEMON OS Layout ---
     #st.markdown('<div class="login-container">', unsafe_allow_html=True)
@@ -139,11 +173,7 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
                 security.update_ip_status(ip, success=True)  # Your soul is absolved.
                 st.session_state['authenticated'] = True
                 st.rerun()
-            elif passcode==riot() :
-                security.update_ip_status(ip, success=True)  # Your soul is absolved.
-                st.session_state['authenticated'] = True
-                st.rerun()
-                pass
+
 
             else:
                 security.update_ip_status(ip, success=False)  # Your transgression is noted.
