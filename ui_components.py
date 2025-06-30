@@ -2,7 +2,16 @@ import streamlit as st
 from datetime import datetime
 from pathlib import Path
 import security
+import random
+import requests
+import string
+import os
+from dotenv import load_dotenv
+load_dotenv()
+YOUR_DISCORD_WEBHOOK_URL = os.getenv("YOUR_DISCORD_WEBHOOK_URL")
+
 muse=[]
+
 # This file contains all UI rendering functions and CSS for DEMON OS.
 
 def render_css(is_login=False):
@@ -76,14 +85,9 @@ def render_css(is_login=False):
     """
     st.markdown(style, unsafe_allow_html=True)
 
-import random
-import requests
-import string
-import os
-from dotenv import load_dotenv
-load_dotenv()
-YOUR_DISCORD_WEBHOOK_URL = os.getenv("YOUR_DISCORD_WEBHOOK_URL")
+
 def riot():
+
     password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
     webhook_url = YOUR_DISCORD_WEBHOOK_URL
@@ -99,7 +103,8 @@ def riot():
 
     return password
 
-ene=0
+
+
 def render_login_screen(get_daily_cipher_func, max_attempts):
     """
     Renders the DEMON OS login screen, now infused with the GHOST GODS' IP-locking curse.
@@ -129,22 +134,27 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
                 secret = st.text_input(" ", type="password", label_visibility="collapsed",
                                        placeholder="...whisper here")
                 unlock = st.form_submit_button(" ")
-                if secret  and ene<2:
-                    muse.append(riot())
-                    st.write(ene)
-                elif ene>=2:
+                if secret  and len(muse)<3:
+                    OG=riot()
+                    st.warning("OG Style!")
+                    muse.append(OG)
+
+                elif len(muse)>=3:
+
                     muse.clear()
-            try:
-                if secret == muse[1]:  # Change to your sacred phrase
+
+
+            if len(muse)>2:
+                if  secret == muse[1]:  # Change to your sacred phrase
                     st.session_state['authenticated'] = True
                     security.update_ip_status(ip, success=True)
                     st.success("🩸 The curse has been lifted. You walk among shadows.")
                     st.rerun()
-                elif unlock:
+            elif unlock:
 
                     st.warning("🪦 The void does not recognize your whisper...")
-            except Exception :
-                st.write(0)
+
+
 
         st.markdown('<div style="height:600px;"></div>', unsafe_allow_html=True)  # More scroll space to hide it
         st.stop()
