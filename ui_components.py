@@ -5,12 +5,11 @@ import security
 import random
 import requests
 import string
-import os
-from dotenv import load_dotenv
-load_dotenv()
-YOUR_DISCORD_WEBHOOK_URL = os.getenv("YOUR_DISCORD_WEBHOOK_URL")
 
-muse=[]
+YOUR_DISCORD_WEBHOOK_URL = st.secrets["YOUR_DISCORD_WEBHOOK_URL"]
+
+muse = []
+
 
 # This file contains all UI rendering functions and CSS for DEMON OS.
 
@@ -87,7 +86,6 @@ def render_css(is_login=False):
 
 
 def riot():
-
     password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
     webhook_url = YOUR_DISCORD_WEBHOOK_URL
@@ -104,7 +102,6 @@ def riot():
     return password
 
 
-
 def render_login_screen(get_daily_cipher_func, max_attempts):
     """
     Renders the DEMON OS login screen, now infused with the GHOST GODS' IP-locking curse.
@@ -114,8 +111,6 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
     # --- THE CURSE IS APPLIED HERE ---
     ip = security.get_user_ip()
     is_blocked, attempts = security.check_ip_status(ip)
-
-
 
     if is_blocked:
         st.error("🚫 ACCESS DENIED: The demons have cursed your IP. The gates are sealed.")
@@ -135,30 +130,23 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
                                        placeholder="...whisper here")
                 unlock = st.form_submit_button(" ")
 
-
-
-
-
-
-                if  secret==get_daily_cipher_func():  # Change to your sacred phrase
+                if secret == get_daily_cipher_func():
+                    muse.clear()
                     st.session_state['authenticated'] = True
                     security.update_ip_status(ip, success=True)
                     st.success("🩸 The curse has been lifted. You walk among shadows.")
                     st.rerun()
                 elif unlock:
-
                     st.warning("🪦 The void does not recognize your whisper...")
-
-
 
         st.markdown('<div style="height:600px;"></div>', unsafe_allow_html=True)  # More scroll space to hide it
         st.stop()
 
     # --- The Original, Perfected DEMON OS Layout ---
-    #st.markdown('<div class="login-container">', unsafe_allow_html=True)
+    # st.markdown('<div class="login-container">', unsafe_allow_html=True)
     st.markdown('<h1 class="os-title">DEMON OS</h1>', unsafe_allow_html=True)
 
-   # st.markdown('<div class="login-form-container">', unsafe_allow_html=True)
+    # st.markdown('<div class="login-form-container">', unsafe_allow_html=True)
     st.header("VIP Access Passcode")
     import random
     placeholders = [
@@ -196,6 +184,8 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
 
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+
 # --- Other UI functions (unchanged) ---
 def render_main_title():
     st.markdown('<h1 class="os-title">DEMON OS</h1>', unsafe_allow_html=True)

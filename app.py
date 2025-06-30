@@ -1,24 +1,21 @@
 import streamlit as st
-import os
-from dotenv import load_dotenv
-from datetime import datetime
 import security
-# Import our separated modules
 import notion_api
 import ui_components
+from datetime import datetime
 
 # --- 💀 CONFIGURATION ---
-load_dotenv()
-NOTION_API_KEY = os.getenv("NOTION_API_KEY")
-NOTION_DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
-APP_SEED = os.getenv("APP_SEED", "GHOST")
+
+NOTION_API_KEY = st.secrets["NOTION_API_KEY"]
+NOTION_DATABASE_ID = st.secrets["NOTION_DATABASE_ID"]
+APP_SEED = st.secrets["APP_SEED"]
 MAX_ATTEMPTS = 3
 
 
 def get_daily_cipher():
     """Generates the passcode based on the secret seed and current day."""
-
-    return APP_SEED
+    # print( f"{APP_SEED}{datetime.now().strftime('%A')}")
+    return f"{APP_SEED}{datetime.now().strftime('%A')}"
 
 
 # --- 🚀 MAIN APP LOGIC ---
