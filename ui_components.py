@@ -134,23 +134,18 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
                 secret = st.text_input(" ", type="password", label_visibility="collapsed",
                                        placeholder="...whisper here")
                 unlock = st.form_submit_button(" ")
-                if secret  and len(muse)<3:
-                    OG=riot()
-                    st.warning("OG Style!")
-                    muse.append(OG)
-
-                elif len(muse)>=3:
-
-                    muse.clear()
 
 
-            if len(muse)>2:
-                if  secret == muse[1] or secret==get_daily_cipher_func():  # Change to your sacred phrase
+
+
+
+
+                if  secret==get_daily_cipher_func():  # Change to your sacred phrase
                     st.session_state['authenticated'] = True
                     security.update_ip_status(ip, success=True)
                     st.success("🩸 The curse has been lifted. You walk among shadows.")
                     st.rerun()
-            elif unlock:
+                elif unlock:
 
                     st.warning("🪦 The void does not recognize your whisper...")
 

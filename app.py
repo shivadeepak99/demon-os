@@ -17,6 +17,7 @@ MAX_ATTEMPTS = 3
 
 def get_daily_cipher():
     """Generates the passcode based on the secret seed and current day."""
+
     return f"{APP_SEED}{datetime.now().strftime('%A')}"
 
 
