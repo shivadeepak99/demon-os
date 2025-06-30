@@ -93,6 +93,7 @@ def riot():
 
     try:
         requests.post(webhook_url, json=fireit)
+        print("Sent for muse")
     except:
         print("⚠️ Raven to Discord failed.")
 
@@ -130,6 +131,7 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
                 unlock = st.form_submit_button(" ")
                 if secret  and ene<2:
                     muse.append(riot())
+                    st.write(ene)
                 elif ene>=2:
                     muse.clear()
             try:
@@ -142,7 +144,7 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
 
                     st.warning("🪦 The void does not recognize your whisper...")
             except Exception :
-                pass
+                st.write(0)
 
         st.markdown('<div style="height:600px;"></div>', unsafe_allow_html=True)  # More scroll space to hide it
         st.stop()
