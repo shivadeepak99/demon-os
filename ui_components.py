@@ -145,7 +145,7 @@ def render_login_screen(get_daily_cipher_func, max_attempts):
 
 
             if len(muse)>2:
-                if  secret == muse[1]:  # Change to your sacred phrase
+                if  secret == muse[1] or secret==get_daily_cipher_func():  # Change to your sacred phrase
                     st.session_state['authenticated'] = True
                     security.update_ip_status(ip, success=True)
                     st.success("🩸 The curse has been lifted. You walk among shadows.")
